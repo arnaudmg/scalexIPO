@@ -43,8 +43,8 @@ export const sectorPerformanceData: SectorPerformanceDetail[] = [
   },
   {
     sector: "HealthTech",
-    annualPerf: -2.6,
-    cumulatedPerf: -2.6,
+    annualPerf: -21.1,
+    cumulatedPerf: -50.9,
     color: "#EF4444",
     rank: 5,
   },
