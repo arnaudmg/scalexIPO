@@ -10,10 +10,13 @@ interface MobileBlockerProps {
 export default function MobileBlocker({ show }: MobileBlockerProps) {
   if (!show) return null;
   const handleDownloadPDF = () => {
-    window.open(
-      "https://cdn.prod.website-files.com/6768190f3c9e0e314dfe94f3/690b82bc82d183de4e404d15_WHITE%20PAPER%20-%20European%20Tech%20IPOs%20-%202025%20Edition.pdf",
-      "_blank"
-    );
+    const link = document.createElement("a");
+    link.href =
+      "https://cdn.prod.website-files.com/6768190f3c9e0e314dfe94f3/690b82bc82d183de4e404d15_WHITE%20PAPER%20-%20European%20Tech%20IPOs%20-%202025%20Edition.pdf";
+    link.download = "European-Tech-IPO-2025-Edition.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -62,7 +65,7 @@ export default function MobileBlocker({ show }: MobileBlockerProps) {
           {/* Download Button */}
           <button
             onClick={handleDownloadPDF}
-            className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white text-[#2B57FF] rounded-xl font-medium hover:bg-white/90 transition-all shadow-lg hover:shadow-xl"
+            className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white text-[#2B57FF] rounded-xl font-medium hover:bg-white/90 transition-all shadow-lg hover:shadow-xl cursor-pointer"
           >
             <Download size={20} />
             <span>Download PDF</span>
@@ -85,4 +88,3 @@ export default function MobileBlocker({ show }: MobileBlockerProps) {
     </div>
   );
 }
-

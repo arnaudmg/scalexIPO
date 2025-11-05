@@ -5,11 +5,12 @@ import Image from "next/image";
 
 export default function HeroSection() {
   const handleDownloadPDF = () => {
-    // Link to PDF
-    window.open(
-      "https://cdn.prod.website-files.com/6768190f3c9e0e314dfe94f3/690b82bc82d183de4e404d15_WHITE%20PAPER%20-%20European%20Tech%20IPOs%20-%202025%20Edition.pdf",
-      "_blank"
-    );
+    const link = document.createElement('a');
+    link.href = 'https://cdn.prod.website-files.com/6768190f3c9e0e314dfe94f3/690b82bc82d183de4e404d15_WHITE%20PAPER%20-%20European%20Tech%20IPOs%20-%202025%20Edition.pdf';
+    link.download = 'European-Tech-IPO-2025-Edition.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleShareLinkedIn = () => {
@@ -39,7 +40,7 @@ export default function HeroSection() {
       <div className="absolute top-6 right-4 sm:top-8 sm:right-8 flex gap-2 sm:gap-3 z-20">
         <button
           onClick={handleDownloadPDF}
-          className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white hover:bg-white/20 transition-colors"
+          className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white hover:bg-white/20 transition-colors cursor-pointer"
         >
           <Download size={16} />
           <span className="text-xs font-light hidden md:inline">PDF</span>
