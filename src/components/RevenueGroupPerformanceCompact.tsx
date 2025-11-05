@@ -19,15 +19,15 @@ export default function RevenueGroupPerformanceCompact() {
         transition={{ duration: 0.6 }}
       >
         <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-3 tracking-tight">
-          Post-IPO stock performance
+          3 years stock performance Post-IPO
         </h2>
         <p className="text-sm text-gray-500 mb-4 font-light">
           More mature companies deliver stronger performance
         </p>
-        
+
         {/* Subtle divider */}
         <div className="w-12 h-px bg-gray-300 mx-auto mb-4" />
-        
+
         <div className="inline-block bg-[#2B57FF] text-white px-5 py-2 rounded-full text-xs font-light tracking-wide">
           Issuers with revenue &lt; €1bn face post-IPO valuation pressure
         </div>
@@ -45,7 +45,7 @@ export default function RevenueGroupPerformanceCompact() {
           {revenueGroupPerformance.map((group, index) => {
             const isPositive = group.annualPerformance >= 0;
             const isHighlighted = group.highlighted;
-            
+
             return (
               <motion.div
                 key={group.group}
@@ -143,4 +143,3 @@ export default function RevenueGroupPerformanceCompact() {
     </div>
   );
 }
-

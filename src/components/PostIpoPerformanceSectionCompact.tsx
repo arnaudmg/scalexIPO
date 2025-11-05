@@ -14,7 +14,7 @@ export default function PostIpoPerformanceSectionCompact() {
         transition={{ duration: 0.6 }}
       >
         <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-3 tracking-tight">
-          Post-IPO Stock Performance
+          3 years stock performance Post-IPO
         </h2>
         <div className="inline-block bg-[#2B57FF] text-white px-5 py-2 rounded-full text-xs font-light tracking-wide mb-4">
           Significant variations across different sub-segments
@@ -34,4 +34,3 @@ export default function PostIpoPerformanceSectionCompact() {
     </div>
   );
 }
-

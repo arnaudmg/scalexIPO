@@ -111,19 +111,17 @@ export const sectorPerformanceTimeline: SectorTimelineData[] = [
 ];
 
 export const sectorPerformanceContext = {
-  title: "Post-IPO stock performance",
+  title: "3 years stock performance Post-IPO",
   subtitle: "Best-performing sectors and technologies",
   headline: "R&D-intensive sectors remain under pressure",
   quote:
     "FoodTech leads with strong post-IPO gains, supported by clearer profitability prospects and resilient demand. In contrast, CleanTech and HealthTech face ongoing valuation pressure due to their capital intensity and longer time-to-profitability. The corporate services segment, driven by AI-related players, shows a notable rebound in year three, reflecting renewed investor confidence in scalable, data-focused models.",
   analysis: {
-    quote: "FoodTech leads with strong post-IPO gains, supported by clearer profitability prospects and resilient demand. In contrast, CleanTech and HealthTech face ongoing valuation pressure due to their capital intensity and longer time-to-profitability. The corporate services segment, driven by AI-related players, shows a notable rebound in year three, reflecting renewed investor confidence in scalable, data-focused models.",
+    quote:
+      "FoodTech leads with strong post-IPO gains, supported by clearer profitability prospects and resilient demand. In contrast, CleanTech and HealthTech face ongoing valuation pressure due to their capital intensity and longer time-to-profitability. The corporate services segment, driven by AI-related players, shows a notable rebound in year three, reflecting renewed investor confidence in scalable, data-focused models.",
     author: "Edouard Thibaut",
     role: "COO",
-    imageSrc: "https://cdn.prod.website-files.com/6768190f3c9e0e314dfe94f3/679279a70929472f15dbc335_EDOUARD_THIBAUT-p-800.avif",
+    imageSrc:
+      "https://cdn.prod.website-files.com/6768190f3c9e0e314dfe94f3/679279a70929472f15dbc335_EDOUARD_THIBAUT-p-800.avif",
   },
 };
-
-
-
-

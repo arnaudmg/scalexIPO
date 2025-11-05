@@ -19,15 +19,15 @@ export default function SectorPerformanceChartCompact() {
         transition={{ duration: 0.6 }}
       >
         <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-3 tracking-tight">
-          Post-IPO stock performance
+          3 years stock performance Post-IPO
         </h2>
         <p className="text-sm text-gray-500 mb-4 font-light">
           {sectorPerformanceContext.subtitle}
         </p>
-        
+
         {/* Subtle divider */}
         <div className="w-12 h-px bg-gray-300 mx-auto mb-4" />
-        
+
         <div className="inline-block bg-[#2B57FF] text-white px-5 py-2 rounded-full text-xs font-light tracking-wide">
           {sectorPerformanceContext.headline}
         </div>
@@ -92,7 +92,9 @@ export default function SectorPerformanceChartCompact() {
                     </div>
                     <div
                       className={`text-2xl font-light ${
-                        sector.annualPerf >= 0 ? "text-green-600" : "text-red-600"
+                        sector.annualPerf >= 0
+                          ? "text-green-600"
+                          : "text-red-600"
                       }`}
                     >
                       {sector.annualPerf > 0 ? "+" : ""}
@@ -140,4 +142,3 @@ export default function SectorPerformanceChartCompact() {
     </div>
   );
 }
-
