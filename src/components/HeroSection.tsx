@@ -6,19 +6,14 @@ import Image from "next/image";
 export default function HeroSection() {
   const handleDownloadPDF = () => {
     window.open(
-      'https://cdn.prod.website-files.com/6768190f3c9e0e314dfe94f3/690b82bc82d183de4e404d15_WHITE%20PAPER%20-%20European%20Tech%20IPOs%20-%202025%20Edition.pdf',
-      '_blank'
+      "https://cdn.prod.website-files.com/6768190f3c9e0e314dfe94f3/690b82bc82d183de4e404d15_WHITE%20PAPER%20-%20European%20Tech%20IPOs%20-%202025%20Edition.pdf",
+      "_blank"
     );
   };
 
   const handleShareLinkedIn = () => {
-    const url = window.location.href;
-    const text =
-      "European Tech IPO 2025 Edition - A comprehensive analysis by ScaleX Invest";
     window.open(
-      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-        url
-      )}&title=${encodeURIComponent(text)}`,
+      "https://www.linkedin.com/company/scalex-invest/?originalSubdomain=fr",
       "_blank"
     );
   };
@@ -46,7 +41,7 @@ export default function HeroSection() {
 
         <button
           onClick={handleShareLinkedIn}
-          className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white hover:bg-white/20 transition-colors"
+          className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-white hover:bg-white/20 transition-colors cursor-pointer"
         >
           <Image
             src="/lkd-logo.svg"

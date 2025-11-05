@@ -13,11 +13,9 @@ export default function ShareFooter() {
   };
 
   const handleShareLinkedIn = () => {
-    const url = window.location.href;
-    const text = "European Tech IPO 2025 Edition - A comprehensive analysis by ScaleX Invest";
     window.open(
-      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}&title=${encodeURIComponent(text)}`,
-      "_blank"
+      'https://www.linkedin.com/company/scalex-invest/?originalSubdomain=fr',
+      '_blank'
     );
   };
 
@@ -63,7 +61,7 @@ export default function ShareFooter() {
 
           <button
             onClick={handleShareLinkedIn}
-            className="flex items-center justify-center w-10 h-10 bg-[#0077B5] border border-[#0077B5] rounded-lg text-white transition-all hover:shadow-lg"
+            className="flex items-center justify-center w-10 h-10 bg-[#0077B5] border border-[#0077B5] rounded-lg text-white transition-all hover:shadow-lg cursor-pointer"
             title="Share on LinkedIn"
           >
             <Image
