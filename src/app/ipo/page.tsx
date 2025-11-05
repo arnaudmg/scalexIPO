@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HeroSection from "@/components/HeroSection";
 import SectionWrapper from "@/components/SectionWrapper";
 import TableOfContents from "@/components/TableOfContents";
@@ -20,11 +20,23 @@ import UserInfoModal from "@/components/UserInfoModal";
 import MobileBlocker from "@/components/MobileBlocker";
 import { UserInfo } from "@/types/userInfo";
 
+const STORAGE_KEY = "user-info-submitted";
+
 export default function IpoPage() {
   const [hasSubmittedInfo, setHasSubmittedInfo] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Check localStorage on mount
+  useEffect(() => {
+    const hasSubmitted = localStorage.getItem(STORAGE_KEY) === "true";
+    setHasSubmittedInfo(hasSubmitted);
+    setIsLoading(false);
+  }, []);
 
   const handleUserInfoSubmit = (userInfo: UserInfo) => {
     console.log("User info submitted:", userInfo);
+    // Save to localStorage
+    localStorage.setItem(STORAGE_KEY, "true");
     setHasSubmittedInfo(true);
   };
 
@@ -41,6 +53,11 @@ export default function IpoPage() {
     { id: "market-perf", title: "Market Performance" },
     { id: "valuation", title: "Valuation Multiples" },
   ];
+
+  // Don't render anything until we've checked localStorage
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <div className="relative">

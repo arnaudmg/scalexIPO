@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import Image from "next/image";
 import { UserInfo, organisationTypes } from "@/types/userInfo";
+import { sendToGoogleSheets } from "@/lib/googleSheets";
 
 interface UserInfoModalProps {
   onSubmit: (userInfo: UserInfo) => void;
@@ -21,6 +22,7 @@ export default function UserInfoModal({ onSubmit }: UserInfoModalProps) {
   const [errors, setErrors] = useState<Partial<Record<keyof UserInfo, string>>>(
     {}
   );
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Filter organisation types based on search term
   const filteredOrganisationTypes = useMemo(() => {
@@ -41,7 +43,8 @@ export default function UserInfoModal({ onSubmit }: UserInfoModalProps) {
     formData.firstName.trim() !== "" &&
     formData.lastName.trim() !== "" &&
     isValidEmail(formData.email) &&
-    formData.organisationType !== "";
+    formData.organisationType !== "" &&
+    !isSubmitting;
 
   const handleInputChange = (field: keyof UserInfo, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -71,7 +74,7 @@ export default function UserInfoModal({ onSubmit }: UserInfoModalProps) {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate all fields
@@ -95,6 +98,17 @@ export default function UserInfoModal({ onSubmit }: UserInfoModalProps) {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
+    }
+
+    // Send to Google Sheets
+    setIsSubmitting(true);
+    try {
+      await sendToGoogleSheets(formData);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      // Continue anyway - we don't want to block the user
+    } finally {
+      setIsSubmitting(false);
     }
 
     onSubmit(formData);
@@ -286,7 +300,7 @@ export default function UserInfoModal({ onSubmit }: UserInfoModalProps) {
                 : "bg-gray-300 cursor-not-allowed"
             }`}
           >
-            Access
+            {isSubmitting ? "Submitting..." : "Access"}
           </button>
         </form>
 
