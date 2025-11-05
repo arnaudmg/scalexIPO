@@ -58,10 +58,10 @@ export default function IpoMap() {
   const updateTooltip = (geo: GeoFeature, event: React.MouseEvent) => {
     // Try different property names that might contain the country name
     const geoName =
-      (typeof geo.properties?.name === 'string' ? geo.properties.name : '') ||
-      (typeof geo.properties?.NAME === 'string' ? geo.properties.NAME : '') ||
-      (typeof geo.properties?.admin === 'string' ? geo.properties.admin : '') ||
-      (typeof geo.properties?.ADMIN === 'string' ? geo.properties.ADMIN : '') ||
+      (typeof geo.properties?.name === "string" ? geo.properties.name : "") ||
+      (typeof geo.properties?.NAME === "string" ? geo.properties.NAME : "") ||
+      (typeof geo.properties?.admin === "string" ? geo.properties.admin : "") ||
+      (typeof geo.properties?.ADMIN === "string" ? geo.properties.ADMIN : "") ||
       "";
     const countryData = getCountryDataByGeoName(geoName);
 
@@ -104,10 +104,18 @@ export default function IpoMap() {
                 geographies.map((geo) => {
                   // Try different property names that might contain the country name
                   const geoName =
-                    (typeof geo.properties?.name === 'string' ? geo.properties.name : '') ||
-                    (typeof geo.properties?.NAME === 'string' ? geo.properties.NAME : '') ||
-                    (typeof geo.properties?.admin === 'string' ? geo.properties.admin : '') ||
-                    (typeof geo.properties?.ADMIN === 'string' ? geo.properties.ADMIN : '') ||
+                    (typeof geo.properties?.name === "string"
+                      ? geo.properties.name
+                      : "") ||
+                    (typeof geo.properties?.NAME === "string"
+                      ? geo.properties.NAME
+                      : "") ||
+                    (typeof geo.properties?.admin === "string"
+                      ? geo.properties.admin
+                      : "") ||
+                    (typeof geo.properties?.ADMIN === "string"
+                      ? geo.properties.ADMIN
+                      : "") ||
                     "";
                   const countryData = getCountryDataByGeoName(geoName);
                   const isEuropean = countryData !== undefined;
@@ -199,7 +207,7 @@ export default function IpoMap() {
         >
           <div className="font-semibold text-gray-900 mb-1">{tooltip.name}</div>
           <div className="text-sm text-gray-600 mb-2">
-            {tooltip.count} {tooltip.count === 1 ? "IPO" : "IPOs"} in 2025
+            {tooltip.count} {tooltip.count === 1 ? "IPO" : "IPOs"} since 2015
           </div>
           <div className="border-t border-gray-200 pt-2">
             <div className="text-xs text-gray-500 mb-1 font-medium">
