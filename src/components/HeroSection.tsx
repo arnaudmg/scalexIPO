@@ -7,7 +7,7 @@ export default function HeroSection() {
   const handleDownloadPDF = () => {
     // Link to PDF
     window.open(
-      "/DRAFT VERSION - European Tech IPO - 2025 Edition (1).pdf",
+      "https://cdn.prod.website-files.com/6768190f3c9e0e314dfe94f3/690b82bc82d183de4e404d15_WHITE%20PAPER%20-%20European%20Tech%20IPOs%20-%202025%20Edition.pdf",
       "_blank"
     );
   };
