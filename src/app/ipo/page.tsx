@@ -17,6 +17,7 @@ import ConclusionSectionCompact from "@/components/ConclusionSectionCompact";
 import ContactSection from "@/components/ContactSection";
 import ShareFooter from "@/components/ShareFooter";
 import UserInfoModal from "@/components/UserInfoModal";
+import MobileBlocker from "@/components/MobileBlocker";
 import { UserInfo } from "@/types/userInfo";
 
 export default function IpoPage() {
@@ -43,9 +44,12 @@ export default function IpoPage() {
 
   return (
     <div className="relative">
-      {/* Main scrollable container with snap */}
+      {/* Mobile Blocker - only visible on mobile after form submission */}
+      <MobileBlocker show={hasSubmittedInfo} />
+
+      {/* Main scrollable container with snap - hidden on mobile */}
       <div
-        className={`h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth ${
+        className={`hidden lg:block h-screen overflow-y-scroll snap-y snap-mandatory scroll-smooth ${
           hasSubmittedInfo ? "" : "blur-sm pointer-events-none"
         }`}
         style={{
