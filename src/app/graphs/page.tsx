@@ -5,8 +5,7 @@ import Header from "@/components/Header";
 import FilterSidebar from "@/components/FilterSidebar";
 import RevenueChart from "@/components/RevenueChart";
 import { metricConfigs, revenueMultipleData } from "@/data/revenueMultiples";
-
-export type PeriodFilter = "all" | "2years" | "5years";
+import { PeriodFilter } from "@/types/filters";
 
 export default function GraphsPage() {
   // Initialize with all metrics visible

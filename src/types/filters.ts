@@ -21,6 +21,8 @@ export enum Sector {
   Fintech = "fintech",
 }
 
+export type PeriodFilter = "all" | "2years" | "5years";
+
 export interface AdvancedDataPoint {
   period: string;
   [key: string]: number | string; // Dynamic keys for sector values

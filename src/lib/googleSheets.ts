@@ -17,7 +17,7 @@ export async function sendToGoogleSheets(
   }
 
   try {
-    const response = await fetch(GOOGLE_SHEETS_URL, {
+    await fetch(GOOGLE_SHEETS_URL, {
       method: "POST",
       mode: "no-cors", // Google Apps Script requires no-cors
       headers: {

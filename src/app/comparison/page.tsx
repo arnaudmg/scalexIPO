@@ -3,10 +3,8 @@
 import { useState, useMemo } from "react";
 import AdvancedFilterSidebar from "@/components/AdvancedFilterSidebar";
 import AdvancedRevenueChart from "@/components/AdvancedRevenueChart";
-import { MarketType, Stage, InvestmentType, Sector } from "@/types/filters";
+import { MarketType, Stage, InvestmentType, Sector, PeriodFilter } from "@/types/filters";
 import { getFilteredData } from "@/data/advancedRevenueMultiples";
-
-export type PeriodFilter = "all" | "2years" | "5years";
 
 export default function ComparisonPage() {
   const [marketType, setMarketType] = useState<MarketType>(

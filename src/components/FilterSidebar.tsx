@@ -1,7 +1,7 @@
 "use client";
 
 import { metricConfigs } from "@/data/revenueMultiples";
-import { PeriodFilter } from "@/app/page";
+import { PeriodFilter } from "@/types/filters";
 
 interface FilterSidebarProps {
   visibleMetrics: Set<string>;

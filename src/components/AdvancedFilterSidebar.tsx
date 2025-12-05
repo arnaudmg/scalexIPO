@@ -7,7 +7,7 @@ import {
   Sector,
   SECTOR_CONFIGS,
 } from "@/types/filters";
-import { PeriodFilter } from "@/app/page";
+import { PeriodFilter } from "@/types/filters";
 
 interface AdvancedFilterSidebarProps {
   marketType: MarketType;
