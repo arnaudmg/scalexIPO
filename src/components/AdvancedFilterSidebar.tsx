@@ -66,11 +66,11 @@ export default function AdvancedFilterSidebar({
   ];
 
   return (
-    <aside className="bg-white border-r border-gray-200 p-6 h-full overflow-y-auto">
-      <div className="space-y-6">
+    <aside className="bg-white border-r border-gray-200 p-4 h-full overflow-y-auto">
+      <div className="space-y-4">
         {/* Market Type */}
         <div>
-          <h3 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wide">
+          <h3 className="text-xs font-semibold text-gray-900 mb-3 uppercase tracking-wide">
             Market Type
           </h3>
           <div className="space-y-2">
@@ -117,7 +117,7 @@ export default function AdvancedFilterSidebar({
         <div
           className={!isStageEnabled ? "opacity-50 pointer-events-none" : ""}
         >
-          <h3 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wide">
+          <h3 className="text-xs font-semibold text-gray-900 mb-3 uppercase tracking-wide">
             Stage
             {!isStageEnabled && (
               <span className="text-xs font-normal text-gray-500 ml-2">
@@ -161,7 +161,7 @@ export default function AdvancedFilterSidebar({
             !isInvestmentTypeEnabled ? "opacity-50 pointer-events-none" : ""
           }
         >
-          <h3 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wide">
+          <h3 className="text-xs font-semibold text-gray-900 mb-3 uppercase tracking-wide">
             Investment Type
             {!isInvestmentTypeEnabled && (
               <span className="text-xs font-normal text-gray-500 ml-2">
@@ -201,8 +201,8 @@ export default function AdvancedFilterSidebar({
 
         {/* Sectors */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-xs font-semibold text-gray-900 uppercase tracking-wide">
               Sectors
             </h3>
             <button
@@ -240,7 +240,7 @@ export default function AdvancedFilterSidebar({
 
         {/* Time Period Filter */}
         <div>
-          <h3 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wide">
+          <h3 className="text-xs font-semibold text-gray-900 mb-3 uppercase tracking-wide">
             Period
           </h3>
           <div className="space-y-2">
@@ -262,7 +262,7 @@ export default function AdvancedFilterSidebar({
 
         {/* Display Options */}
         <div>
-          <h3 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wide">
+          <h3 className="text-xs font-semibold text-gray-900 mb-3 uppercase tracking-wide">
             Display Options
           </h3>
           <label className="flex items-center gap-3 cursor-pointer group">

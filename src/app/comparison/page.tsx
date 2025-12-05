@@ -3,7 +3,13 @@
 import { useState, useMemo } from "react";
 import AdvancedFilterSidebar from "@/components/AdvancedFilterSidebar";
 import AdvancedRevenueChart from "@/components/AdvancedRevenueChart";
-import { MarketType, Stage, InvestmentType, Sector, PeriodFilter } from "@/types/filters";
+import {
+  MarketType,
+  Stage,
+  InvestmentType,
+  Sector,
+  PeriodFilter,
+} from "@/types/filters";
 import { getFilteredData } from "@/data/advancedRevenueMultiples";
 
 export default function ComparisonPage() {
@@ -68,10 +74,10 @@ export default function ComparisonPage() {
   }, [baseData, periodFilter]);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
+    <div className="h-screen bg-white flex flex-col overflow-hidden">
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar */}
-        <div className="w-80 flex-shrink-0">
+        <div className="w-80 flex-shrink-0 border-r border-gray-200 bg-white">
           <AdvancedFilterSidebar
             marketType={marketType}
             stage={stage}
@@ -91,9 +97,9 @@ export default function ComparisonPage() {
         </div>
 
         {/* Main Content */}
-        <main className="flex-1 p-8 overflow-auto">
+        <main className="flex-1 p-4 overflow-hidden">
           <div className="max-w-[1400px] mx-auto h-full">
-            <div className="h-[calc(100vh-8rem)]">
+            <div className="h-full">
               {selectedSectors.size === 0 ? (
                 <div className="bg-white rounded-xl shadow-sm p-8 h-full flex items-center justify-center">
                   <div className="text-center">
