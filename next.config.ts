@@ -11,6 +11,23 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "X-Frame-Options",
+            value: "ALLOWALL", // Autorise l'intégration en iframe
+          },
+          {
+            key: "Content-Security-Policy",
+            value: "frame-ancestors *", // Autorise tous les domaines à embedder (utile pour Webflow)
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;
