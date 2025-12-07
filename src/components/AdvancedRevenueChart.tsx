@@ -54,28 +54,64 @@ export default function AdvancedRevenueChart({
 }: AdvancedRevenueChartProps) {
   const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
+      const currentIndex = data.findIndex((item) => item.period === label);
+      const previousData = currentIndex > 0 ? data[currentIndex - 1] : null;
+
       return (
         <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-4">
           <p className="font-semibold text-gray-900 mb-2">{label}</p>
-          {payload.map((entry, index: number) => (
-            <div key={index} className="flex items-center gap-2 text-sm">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{
-                  backgroundColor: entry.color,
-                  opacity:
-                    entry.dataKey === "average" ||
-                    entry.dataKey === "eurotech_average"
-                      ? 0.7
-                      : 1,
-                }}
-              />
-              <span className="text-gray-700">{entry.name}:</span>
-              <span className="font-semibold text-gray-900">
-                {entry.value.toFixed(2)}
-              </span>
-            </div>
-          ))}
+          {payload.map((entry, index: number) => {
+            const currentValue = entry.value;
+            const previousValue =
+              previousData && typeof previousData[entry.dataKey] === "number"
+                ? (previousData[entry.dataKey] as number)
+                : null;
+
+            let percentChange = null;
+            if (previousValue !== null && previousValue !== 0) {
+              percentChange =
+                ((currentValue - previousValue) / previousValue) * 100;
+            }
+
+            return (
+              <div key={index} className="flex flex-col gap-0.5 mb-2 last:mb-0">
+                <div className="flex items-center gap-2 text-sm">
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{
+                      backgroundColor: entry.color,
+                      opacity:
+                        entry.dataKey === "average" ||
+                        entry.dataKey === "eurotech_average"
+                          ? 0.7
+                          : 1,
+                    }}
+                  />
+                  <span className="text-gray-700">{entry.name}:</span>
+                  <span className="font-semibold text-gray-900">
+                    {entry.value.toFixed(2)}
+                  </span>
+                </div>
+                {percentChange !== null && (
+                  <div className="pl-5 text-xs text-gray-500">
+                    <span
+                      className={
+                        percentChange > 0
+                          ? "text-green-600"
+                          : percentChange < 0
+                          ? "text-red-600"
+                          : "text-gray-500"
+                      }
+                    >
+                      {percentChange > 0 ? "+" : ""}
+                      {percentChange.toFixed(1)}%
+                    </span>{" "}
+                    vs last sem.
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       );
     }
