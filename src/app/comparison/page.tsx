@@ -14,10 +14,20 @@ import {
 } from "@/types/filters";
 import { mockData, periods } from "@/data/advancedRevenueMultiples";
 
+const LOCKED_SCENARIOS = [
+  ScenarioId.AI,
+  ScenarioId.Cleantech,
+  ScenarioId.EHealth,
+  ScenarioId.SaaS,
+  ScenarioId.IPOPerYear,
+];
+
 export default function ComparisonPage() {
   const [selectedScenario, setSelectedScenario] = useState<ScenarioId>(
     ScenarioId.GlobalIndex
   );
+
+  const isLocked = LOCKED_SCENARIOS.includes(selectedScenario);
 
   const { chartData, customSeries } = useMemo(() => {
     // 1. Calculate Global Average (Eurotech Revenue Multiple)
@@ -330,6 +340,7 @@ export default function ComparisonPage() {
               <AdvancedRevenueChart
                 data={chartData}
                 customSeries={customSeries}
+                isLocked={isLocked}
               />
             </div>
           </div>
