@@ -18,10 +18,19 @@ import {
   AdvancedDataPoint,
 } from "@/types/filters";
 
+export interface ChartSeries {
+  dataKey: string;
+  name: string;
+  color: string;
+  strokeDasharray?: string;
+  strokeOpacity?: number;
+}
+
 interface AdvancedRevenueChartProps {
   data: AdvancedDataPoint[];
-  selectedSectors: Set<Sector>;
-  showAverage: boolean;
+  selectedSectors?: Set<Sector>;
+  showAverage?: boolean;
+  customSeries?: ChartSeries[];
 }
 
 interface TooltipProps {
@@ -39,6 +48,7 @@ export default function AdvancedRevenueChart({
   data,
   selectedSectors,
   showAverage,
+  customSeries,
 }: AdvancedRevenueChartProps) {
   const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
@@ -51,7 +61,11 @@ export default function AdvancedRevenueChart({
                 className="w-3 h-3 rounded-full"
                 style={{
                   backgroundColor: entry.color,
-                  opacity: entry.dataKey === "average" ? 0.7 : 1,
+                  opacity:
+                    entry.dataKey === "average" ||
+                    entry.dataKey === "eurotech_average"
+                      ? 0.7
+                      : 1,
                 }}
               />
               <span className="text-gray-700">{entry.name}:</span>
@@ -73,9 +87,12 @@ export default function AdvancedRevenueChart({
         {payload?.map((entry, index: number) => {
           const color = entry.color || "#000";
           const dataKey = String(entry.dataKey);
+          const isAverage =
+            dataKey === "average" || dataKey === "eurotech_average";
+
           return (
             <div key={index} className="flex items-center gap-2">
-              {dataKey === "average" ? (
+              {isAverage ? (
                 <div
                   className="w-8 h-0.5"
                   style={{
@@ -130,60 +147,96 @@ export default function AdvancedRevenueChart({
             <Tooltip content={<CustomTooltip />} />
             <Legend content={renderLegend} />
 
-            {/* Sector lines */}
-            {Array.from(selectedSectors).map((sector) => (
-              <Line
-                key={sector}
-                type="monotone"
-                dataKey={sector}
-                name={SECTOR_CONFIGS[sector].name}
-                stroke={SECTOR_CONFIGS[sector].color}
-                strokeWidth={3}
-                dot={{
-                  r: 5,
-                  fill: SECTOR_CONFIGS[sector].color,
-                  strokeWidth: 2,
-                  stroke: "#fff",
-                }}
-                activeDot={{
-                  r: 7,
-                  fill: SECTOR_CONFIGS[sector].color,
-                  strokeWidth: 2,
-                  stroke: "#fff",
-                }}
-                animationDuration={800}
-                animationEasing="ease-in-out"
-              />
-            ))}
+            {/* Default Mode: Sector lines */}
+            {!customSeries &&
+              selectedSectors &&
+              Array.from(selectedSectors).map((sector) => (
+                <Line
+                  key={sector}
+                  type="monotone"
+                  dataKey={sector}
+                  name={SECTOR_CONFIGS[sector].name}
+                  stroke={SECTOR_CONFIGS[sector].color}
+                  strokeWidth={3}
+                  dot={{
+                    r: 5,
+                    fill: SECTOR_CONFIGS[sector].color,
+                    strokeWidth: 2,
+                    stroke: "#fff",
+                  }}
+                  activeDot={{
+                    r: 7,
+                    fill: SECTOR_CONFIGS[sector].color,
+                    strokeWidth: 2,
+                    stroke: "#fff",
+                  }}
+                  animationDuration={800}
+                  animationEasing="ease-in-out"
+                />
+              ))}
 
-            {/* Average line */}
-            {showAverage && selectedSectors.size > 0 && (
-              <Line
-                type="monotone"
-                dataKey="average"
-                name={AVERAGE_CONFIG.name}
-                stroke={AVERAGE_CONFIG.color}
-                strokeWidth={3}
-                strokeDasharray="5 5"
-                strokeOpacity={0.7}
-                dot={{
-                  r: 4,
-                  fill: AVERAGE_CONFIG.color,
-                  strokeWidth: 2,
-                  stroke: "#fff",
-                  opacity: 0.7,
-                }}
-                activeDot={{
-                  r: 6,
-                  fill: AVERAGE_CONFIG.color,
-                  strokeWidth: 2,
-                  stroke: "#fff",
-                  opacity: 0.7,
-                }}
-                animationDuration={800}
-                animationEasing="ease-in-out"
-              />
-            )}
+            {/* Default Mode: Average line */}
+            {!customSeries &&
+              showAverage &&
+              selectedSectors &&
+              selectedSectors.size > 0 && (
+                <Line
+                  type="monotone"
+                  dataKey="average"
+                  name={AVERAGE_CONFIG.name}
+                  stroke={AVERAGE_CONFIG.color}
+                  strokeWidth={3}
+                  strokeDasharray="5 5"
+                  strokeOpacity={0.7}
+                  dot={{
+                    r: 4,
+                    fill: AVERAGE_CONFIG.color,
+                    strokeWidth: 2,
+                    stroke: "#fff",
+                    opacity: 0.7,
+                  }}
+                  activeDot={{
+                    r: 6,
+                    fill: AVERAGE_CONFIG.color,
+                    strokeWidth: 2,
+                    stroke: "#fff",
+                    opacity: 0.7,
+                  }}
+                  animationDuration={800}
+                  animationEasing="ease-in-out"
+                />
+              )}
+
+            {/* Custom Series Mode */}
+            {customSeries &&
+              customSeries.map((series) => (
+                <Line
+                  key={series.dataKey}
+                  type="monotone"
+                  dataKey={series.dataKey}
+                  name={series.name}
+                  stroke={series.color}
+                  strokeWidth={3}
+                  strokeDasharray={series.strokeDasharray}
+                  strokeOpacity={series.strokeOpacity}
+                  dot={{
+                    r: 4,
+                    fill: series.color,
+                    strokeWidth: 2,
+                    stroke: "#fff",
+                    opacity: series.strokeOpacity || 1,
+                  }}
+                  activeDot={{
+                    r: 6,
+                    fill: series.color,
+                    strokeWidth: 2,
+                    stroke: "#fff",
+                    opacity: series.strokeOpacity || 1,
+                  }}
+                  animationDuration={800}
+                  animationEasing="ease-in-out"
+                />
+              ))}
           </LineChart>
         </ResponsiveContainer>
       </div>

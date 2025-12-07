@@ -1,137 +1,336 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import AdvancedFilterSidebar from "@/components/AdvancedFilterSidebar";
-import AdvancedRevenueChart from "@/components/AdvancedRevenueChart";
+import ScenarioSidebar, { ScenarioId } from "@/components/ScenarioSidebar";
+import AdvancedRevenueChart, {
+  ChartSeries,
+} from "@/components/AdvancedRevenueChart";
 import {
   MarketType,
   Stage,
   InvestmentType,
   Sector,
-  PeriodFilter,
+  AdvancedDataPoint,
 } from "@/types/filters";
-import { getFilteredData } from "@/data/advancedRevenueMultiples";
+import { mockData, periods } from "@/data/advancedRevenueMultiples";
 
 export default function ComparisonPage() {
-  const [marketType, setMarketType] = useState<MarketType>(
-    MarketType.VentureCapital
+  const [selectedScenario, setSelectedScenario] = useState<ScenarioId>(
+    ScenarioId.GlobalIndex
   );
-  const [stage, setStage] = useState<Stage>(Stage.EarlyStage);
-  const [investmentType, setInvestmentType] = useState<InvestmentType>(
-    InvestmentType.Growth
-  );
-  const [selectedSectors, setSelectedSectors] = useState<Set<Sector>>(
-    new Set(Object.values(Sector))
-  );
-  const [showAverage, setShowAverage] = useState(true);
-  const [periodFilter, setPeriodFilter] = useState<PeriodFilter>("all");
 
-  const handleMarketTypeChange = (newMarketType: MarketType) => {
-    setMarketType(newMarketType);
-    // If switching to Public Markets, reset to default values for disabled filters
-    if (newMarketType === MarketType.PublicMarkets) {
-      setStage(Stage.EarlyStage);
-      setInvestmentType(InvestmentType.Growth);
-    }
-  };
+  const { chartData, customSeries } = useMemo(() => {
+    // 1. Calculate Global Average (Eurotech Revenue Multiple)
+    const globalAverages = periods.map((_, periodIndex) => {
+      let sum = 0;
+      let count = 0;
 
-  const toggleSector = (sector: Sector) => {
-    setSelectedSectors((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(sector)) {
-        newSet.delete(sector);
-      } else {
-        newSet.add(sector);
-      }
-      return newSet;
+      Object.values(MarketType).forEach((market) => {
+        Object.values(Stage).forEach((stage) => {
+          Object.values(InvestmentType).forEach((inv) => {
+            // Check if this path exists in mockData (some might not for Public Markets if strict typing, but here it is consistent)
+            // Actually mockData has specific structure.
+            // Safe access:
+            const marketData = mockData[market];
+            const stageData = marketData?.[stage];
+            const invData = stageData?.[inv];
+
+            if (invData) {
+              Object.values(Sector).forEach((sector) => {
+                const values = invData[sector];
+                if (values && values[periodIndex] !== undefined) {
+                  sum += values[periodIndex];
+                  count++;
+                }
+              });
+            }
+          });
+        });
+      });
+
+      return count > 0 ? sum / count : 0;
     });
-  };
 
-  // Determine which filters are enabled based on market type
-  const isStageEnabled = marketType !== MarketType.PublicMarkets;
-  const isInvestmentTypeEnabled = marketType !== MarketType.PublicMarkets;
+    // 2. Prepare Base Data Points with Global Average
+    const basePoints: AdvancedDataPoint[] = periods.map((period, index) => ({
+      period,
+      eurotech_average: globalAverages[index],
+    }));
 
-  // Get data based on filters
-  const baseData = getFilteredData(
-    marketType,
-    stage,
-    investmentType,
-    selectedSectors
-  );
+    // 3. Define Series based on Scenario
+    let series: ChartSeries[] = [];
+    let specificData: number[] = [];
 
-  // Filter data based on period selection
-  const chartData = useMemo(() => {
-    if (periodFilter === "all") {
-      return baseData;
-    } else if (periodFilter === "2years") {
-      // Last 2 years = last 4 periods (2 years * 2 semesters)
-      return baseData.slice(-4);
-    } else if (periodFilter === "5years") {
-      // Last 5 years = all data
-      return baseData;
+    // Helper to aggregate data for a specific filter set
+    const aggregateData = (
+      filter: (
+        m: MarketType,
+        s: Stage,
+        i: InvestmentType,
+        sec: Sector
+      ) => boolean
+    ) => {
+      return periods.map((_, periodIndex) => {
+        let sum = 0;
+        let count = 0;
+
+        Object.values(MarketType).forEach((m) => {
+          const mData = mockData[m];
+          if (!mData) return;
+          Object.values(Stage).forEach((s) => {
+            const sData = mData[s];
+            if (!sData) return;
+            Object.values(InvestmentType).forEach((i) => {
+              const iData = sData[i];
+              if (!iData) return;
+              Object.values(Sector).forEach((sec) => {
+                if (filter(m, s, i, sec)) {
+                  const val = iData[sec]?.[periodIndex];
+                  if (val !== undefined) {
+                    sum += val;
+                    count++;
+                  }
+                }
+              });
+            });
+          });
+        });
+        return count > 0 ? sum / count : 0;
+      });
+    };
+
+    switch (selectedScenario) {
+      case ScenarioId.GlobalIndex:
+        series = [
+          {
+            dataKey: "eurotech_average",
+            name: "Eurotech Revenue Multiple",
+            color: "#6b7280",
+            strokeDasharray: "5 5",
+          },
+        ];
+        break;
+
+      case ScenarioId.EarlyStageVC:
+        specificData = aggregateData(
+          (m, s) => m === MarketType.VentureCapital && s === Stage.EarlyStage
+        );
+        series = [
+          {
+            dataKey: "specific_scenario",
+            name: "Eurotech Early Stage Venture",
+            color: "#2B57FF",
+          },
+          {
+            dataKey: "eurotech_average",
+            name: "Eurotech Revenue Multiple",
+            color: "#6b7280",
+            strokeDasharray: "5 5",
+          },
+        ];
+        break;
+
+      case ScenarioId.LateStageVC:
+        specificData = aggregateData(
+          (m, s) => m === MarketType.VentureCapital && s === Stage.LateStage
+        );
+        series = [
+          {
+            dataKey: "specific_scenario",
+            name: "Eurotech Late Stage Venture",
+            color: "#2B57FF",
+          },
+          {
+            dataKey: "eurotech_average",
+            name: "Eurotech Revenue Multiple",
+            color: "#6b7280",
+            strokeDasharray: "5 5",
+          },
+        ];
+        break;
+
+      case ScenarioId.GrowthPE:
+        specificData = aggregateData(
+          (m, s, i) =>
+            m === MarketType.PrivateEquity && i === InvestmentType.Growth
+        );
+        series = [
+          {
+            dataKey: "specific_scenario",
+            name: "Eurotech Growth PE",
+            color: "#2B57FF",
+          },
+          {
+            dataKey: "eurotech_average",
+            name: "Eurotech Revenue Multiple",
+            color: "#6b7280",
+            strokeDasharray: "5 5",
+          },
+        ];
+        break;
+
+      case ScenarioId.LBO_PE:
+        specificData = aggregateData(
+          (m, s, i) =>
+            m === MarketType.PrivateEquity && i === InvestmentType.Buyout
+        );
+        series = [
+          {
+            dataKey: "specific_scenario",
+            name: "Eurotech LBO - PE",
+            color: "#2B57FF",
+          },
+          {
+            dataKey: "eurotech_average",
+            name: "Eurotech Revenue Multiple",
+            color: "#6b7280",
+            strokeDasharray: "5 5",
+          },
+        ];
+        break;
+
+      case ScenarioId.Listed:
+        specificData = aggregateData((m) => m === MarketType.PublicMarkets);
+        series = [
+          {
+            dataKey: "specific_scenario",
+            name: "Eurotech Listed",
+            color: "#2B57FF",
+          },
+          {
+            dataKey: "eurotech_average",
+            name: "Eurotech Revenue Multiple",
+            color: "#6b7280",
+            strokeDasharray: "5 5",
+          },
+        ];
+        break;
+
+      case ScenarioId.AI:
+        specificData = aggregateData((m, s, i, sec) => sec === Sector.AI);
+        series = [
+          {
+            dataKey: "specific_scenario",
+            name: "Eurotech AI",
+            color: "#3b82f6",
+          },
+          {
+            dataKey: "eurotech_average",
+            name: "Eurotech Revenue Multiple",
+            color: "#6b7280",
+            strokeDasharray: "5 5",
+          },
+        ];
+        break;
+
+      case ScenarioId.Cleantech:
+        specificData = aggregateData((m, s, i, sec) => sec === Sector.Climate);
+        series = [
+          {
+            dataKey: "specific_scenario",
+            name: "Eurotech Cleantech & Energy",
+            color: "#22c55e",
+          },
+          {
+            dataKey: "eurotech_average",
+            name: "Eurotech Revenue Multiple",
+            color: "#6b7280",
+            strokeDasharray: "5 5",
+          },
+        ];
+        break;
+
+      case ScenarioId.EHealth:
+        specificData = aggregateData((m, s, i, sec) => sec === Sector.ESante);
+        series = [
+          {
+            dataKey: "specific_scenario",
+            name: "Eurotech E-Health",
+            color: "#ef4444",
+          },
+          {
+            dataKey: "eurotech_average",
+            name: "Eurotech Revenue Multiple",
+            color: "#6b7280",
+            strokeDasharray: "5 5",
+          },
+        ];
+        break;
+
+      case ScenarioId.SaaS:
+        // Using Fintech as proxy/placeholder for SaaS as requested
+        specificData = aggregateData((m, s, i, sec) => sec === Sector.Fintech);
+        series = [
+          {
+            dataKey: "specific_scenario",
+            name: "Eurotech SAAS",
+            color: "#f97316",
+          },
+          {
+            dataKey: "eurotech_average",
+            name: "Eurotech Revenue Multiple",
+            color: "#6b7280",
+            strokeDasharray: "5 5",
+          },
+        ];
+        break;
+
+      case ScenarioId.IPOPerYear:
+        // Custom data for IPO per year
+        const ipoYears = [
+          "2015",
+          "2016",
+          "2017",
+          "2018",
+          "2019",
+          "2020",
+          "2021",
+          "2022",
+          "2023",
+        ];
+        const ipoCounts = [8, 10, 12, 15, 14, 18, 25, 5, 12]; // Total 119
+
+        return {
+          chartData: ipoYears.map((year, i) => ({
+            period: year,
+            ipo_count: ipoCounts[i],
+          })),
+          customSeries: [
+            {
+              dataKey: "ipo_count",
+              name: "# IPO per year",
+              color: "#2B57FF",
+            },
+          ],
+        };
     }
-    return baseData;
-  }, [baseData, periodFilter]);
+
+    // Merge specific data into base points
+    const finalData = basePoints.map((point, index) => ({
+      ...point,
+      specific_scenario: specificData[index],
+    }));
+
+    return { chartData: finalData, customSeries: series };
+  }, [selectedScenario]);
 
   return (
     <div className="h-screen bg-white flex flex-col overflow-hidden">
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar */}
-        <div className="w-80 flex-shrink-0 border-r border-gray-200 bg-white">
-          <AdvancedFilterSidebar
-            marketType={marketType}
-            stage={stage}
-            investmentType={investmentType}
-            selectedSectors={selectedSectors}
-            showAverage={showAverage}
-            periodFilter={periodFilter}
-            onMarketTypeChange={handleMarketTypeChange}
-            onStageChange={setStage}
-            onInvestmentTypeChange={setInvestmentType}
-            onToggleSector={toggleSector}
-            onToggleAverage={() => setShowAverage(!showAverage)}
-            onPeriodFilterChange={setPeriodFilter}
-            isStageEnabled={isStageEnabled}
-            isInvestmentTypeEnabled={isInvestmentTypeEnabled}
-          />
-        </div>
+        <ScenarioSidebar
+          selectedScenario={selectedScenario}
+          onSelectScenario={setSelectedScenario}
+        />
 
         {/* Main Content */}
         <main className="flex-1 p-4 overflow-hidden">
           <div className="max-w-[1400px] mx-auto h-full">
             <div className="h-full">
-              {selectedSectors.size === 0 ? (
-                <div className="bg-white rounded-xl shadow-sm p-8 h-full flex items-center justify-center">
-                  <div className="text-center">
-                    <svg
-                      className="mx-auto h-12 w-12 text-gray-400 mb-4"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                      />
-                    </svg>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      No sectors selected
-                    </h3>
-                    <p className="text-gray-500">
-                      Please select at least one sector from the sidebar to view
-                      the chart.
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <AdvancedRevenueChart
-                  data={chartData}
-                  selectedSectors={selectedSectors}
-                  showAverage={showAverage}
-                />
-              )}
+              <AdvancedRevenueChart
+                data={chartData}
+                customSeries={customSeries}
+              />
             </div>
           </div>
         </main>

@@ -8,7 +8,7 @@ import {
 
 // Comprehensive mock data structure
 // Format: [marketType][stage][investmentType][sector][period] = value
-type DataStructure = {
+export type DataStructure = {
   [key in MarketType]: {
     [key in Stage]: {
       [key in InvestmentType]: {
@@ -33,7 +33,7 @@ const periods = [
 ];
 
 // Mock data with realistic trends
-const mockData: DataStructure = {
+export const mockData: DataStructure = {
   [MarketType.VentureCapital]: {
     [Stage.EarlyStage]: {
       [InvestmentType.Growth]: {
