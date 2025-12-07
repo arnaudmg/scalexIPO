@@ -135,7 +135,7 @@ export default function AdvancedRevenueChart({
               </h3>
               <p className="text-gray-600 mb-6 leading-relaxed">
                 Unlock detailed insights and full datasets in our comprehensive
-                2025 European Tech IPO Report.
+                Whitepaper.
               </p>
               <a
                 href="https://scalexinvest.webflow.io/white-paper/european-tech-ipos-2025-edition"
