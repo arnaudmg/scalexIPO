@@ -174,7 +174,7 @@ export default function AdvancedRevenueChart({
                 Whitepaper.
               </p>
               <a
-                href="https://scalexinvest.webflow.io/white-paper/european-tech-ipos-2025-edition"
+                href="https://www.scalex-invest.com/white-paper/eurotech-valuation-index-2025-edition"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-white transition-colors bg-[#2B57FF] rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 shadow-sm"
