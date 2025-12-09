@@ -18,6 +18,26 @@ export type DataStructure = {
   };
 };
 
+// Market indices structure for benchmark comparison
+export enum MarketIndex {
+  Eurotech = "eurotech",
+  VentureCapital = "ventureCapital",
+  EarlyStageVC = "earlyStageVC",
+  LateStageVC = "lateStageVC",
+  PrivateEquity = "privateEquity",
+  GrowthEquity = "growthEquity",
+  Buyout = "buyout",
+  Listed = "listed",
+}
+
+export type MarketIndicesData = {
+  [key in MarketIndex]: {
+    name: string;
+    description: string;
+    data: number[];
+  };
+};
+
 const periods = [
   "S1 2020",
   "S2 2020",
@@ -203,6 +223,59 @@ export const mockData: DataStructure = {
     },
   },
 };
+
+// Market indices data - Benchmark indices for comparison
+export const marketIndices: MarketIndicesData = {
+  [MarketIndex.Eurotech]: {
+    name: "Eurotech Index",
+    description: "European Technology Companies Median Revenue Multiple",
+    data: [7.68, 7.01, 7.04, 7.55, 8.24, 7.6, 5.91, 5.48, 5.79, 5.38, 4.73],
+  },
+  [MarketIndex.VentureCapital]: {
+    name: "Venture Capital",
+    description: "Venture Capital Median Revenue Multiple",
+    data: [9.22, 8.19, 8.54, 9.0, 9.58, 9.2, 6.82, 6.91, 7.53, 7.88, 7.33],
+  },
+  [MarketIndex.EarlyStageVC]: {
+    name: "Early-stage VC",
+    description: "Early-stage VC Median Revenue Multiple",
+    data: [10.58, 9.66, 9.65, 9.5, 9.58, 9.21, 7.77, 9.74, 10.0, 11.04, 10.29],
+  },
+  [MarketIndex.LateStageVC]: {
+    name: "Late-stage VC",
+    description: "Late-stage VC Median Revenue Multiple",
+    data: [8.51, 7.54, 7.7, 8.5, 10.24, 9.3, 6.82, 6.15, 6.77, 6.63, 4.72],
+  },
+  [MarketIndex.PrivateEquity]: {
+    name: "Private Equity",
+    description: "Private Equity Median Revenue Multiple",
+    data: [3.0, 3.23, 3.2, 3.75, 4.35, 4.35, 3.28, 2.88, 2.7, 2.32, 2.18],
+  },
+  [MarketIndex.GrowthEquity]: {
+    name: "Growth Equity",
+    description: "Growth Equity Median Revenue Multiple",
+    data: [3.42, 3.81, 3.2, 4.36, 5.28, 4.85, 4.27, 3.59, 2.85, 3.35, 4.29],
+  },
+  [MarketIndex.Buyout]: {
+    name: "Buyout",
+    description: "Buyout Median Revenue Multiple",
+    data: [2.97, 2.35, 2.47, 3.51, 4.35, 3.38, 2.63, 3.21, 2.7, 2.32, 1.85],
+  },
+  [MarketIndex.Listed]: {
+    name: "European Listed Tech Segment",
+    description: "European Listed Tech Segment Median Revenue Multiple",
+    data: [3.49, 5.27, 6.67, 6.35, 3.43, 2.7, 2.39, 2.28, 2.26, 2.12, 2.35],
+  },
+};
+
+export function getMarketIndexData(index: MarketIndex): AdvancedDataPoint[] {
+  const indexData = marketIndices[index];
+
+  return periods.map((period, i) => ({
+    period,
+    [index]: indexData.data[i],
+  }));
+}
 
 export function getFilteredData(
   marketType: MarketType,

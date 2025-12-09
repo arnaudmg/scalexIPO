@@ -12,8 +12,14 @@ import {
   InvestmentType,
   Sector,
   AdvancedDataPoint,
+  INDEX_CONFIGS,
 } from "@/types/filters";
-import { mockData, periods } from "@/data/advancedRevenueMultiples";
+import {
+  mockData,
+  periods,
+  marketIndices,
+  MarketIndex,
+} from "@/data/advancedRevenueMultiples";
 
 const LOCKED_SCENARIOS = [
   ScenarioId.AI,
@@ -37,41 +43,13 @@ export default function ComparisonPage() {
   const isLocked = LOCKED_SCENARIOS.includes(selectedScenario);
 
   const { chartData, customSeries } = useMemo(() => {
-    // 1. Calculate Global Average (Eurotech Revenue Multiple)
-    const globalAverages = periods.map((_, periodIndex) => {
-      let sum = 0;
-      let count = 0;
+    // 1. Get Eurotech Index Data (real market data)
+    const eurotechData = marketIndices[MarketIndex.Eurotech].data;
 
-      Object.values(MarketType).forEach((market) => {
-        Object.values(Stage).forEach((stage) => {
-          Object.values(InvestmentType).forEach((inv) => {
-            // Check if this path exists in mockData (some might not for Public Markets if strict typing, but here it is consistent)
-            // Actually mockData has specific structure.
-            // Safe access:
-            const marketData = mockData[market];
-            const stageData = marketData?.[stage];
-            const invData = stageData?.[inv];
-
-            if (invData) {
-              Object.values(Sector).forEach((sector) => {
-                const values = invData[sector];
-                if (values && values[periodIndex] !== undefined) {
-                  sum += values[periodIndex];
-                  count++;
-                }
-              });
-            }
-          });
-        });
-      });
-
-      return count > 0 ? sum / count : 0;
-    });
-
-    // 2. Prepare Base Data Points with Global Average
+    // 2. Prepare Base Data Points with Eurotech Index
     const basePoints: AdvancedDataPoint[] = periods.map((period, index) => ({
       period,
-      eurotech_average: globalAverages[index],
+      eurotech_average: eurotechData[index],
     }));
 
     // 3. Define Series based on Scenario
@@ -121,17 +99,15 @@ export default function ComparisonPage() {
         series = [
           {
             dataKey: "eurotech_average",
-            name: "Eurotech Revenue Multiple",
-            color: "#6b7280",
+            name: INDEX_CONFIGS.eurotech.name,
+            color: INDEX_CONFIGS.eurotech.color,
             strokeDasharray: "5 5",
           },
         ];
         break;
 
       case ScenarioId.EarlyStageVC:
-        specificData = aggregateData(
-          (m, s) => m === MarketType.VentureCapital && s === Stage.EarlyStage
-        );
+        specificData = marketIndices[MarketIndex.EarlyStageVC].data;
         series = [
           {
             dataKey: "specific_scenario",
@@ -140,17 +116,15 @@ export default function ComparisonPage() {
           },
           {
             dataKey: "eurotech_average",
-            name: "Eurotech Revenue Multiple",
-            color: "#6b7280",
+            name: INDEX_CONFIGS.eurotech.name,
+            color: INDEX_CONFIGS.eurotech.color,
             strokeDasharray: "5 5",
           },
         ];
         break;
 
       case ScenarioId.LateStageVC:
-        specificData = aggregateData(
-          (m, s) => m === MarketType.VentureCapital && s === Stage.LateStage
-        );
+        specificData = marketIndices[MarketIndex.LateStageVC].data;
         series = [
           {
             dataKey: "specific_scenario",
@@ -159,18 +133,15 @@ export default function ComparisonPage() {
           },
           {
             dataKey: "eurotech_average",
-            name: "Eurotech Revenue Multiple",
-            color: "#6b7280",
+            name: INDEX_CONFIGS.eurotech.name,
+            color: INDEX_CONFIGS.eurotech.color,
             strokeDasharray: "5 5",
           },
         ];
         break;
 
       case ScenarioId.GrowthPE:
-        specificData = aggregateData(
-          (m, s, i) =>
-            m === MarketType.PrivateEquity && i === InvestmentType.Growth
-        );
+        specificData = marketIndices[MarketIndex.GrowthEquity].data;
         series = [
           {
             dataKey: "specific_scenario",
@@ -179,18 +150,15 @@ export default function ComparisonPage() {
           },
           {
             dataKey: "eurotech_average",
-            name: "Eurotech Revenue Multiple",
-            color: "#6b7280",
+            name: INDEX_CONFIGS.eurotech.name,
+            color: INDEX_CONFIGS.eurotech.color,
             strokeDasharray: "5 5",
           },
         ];
         break;
 
       case ScenarioId.LBO_PE:
-        specificData = aggregateData(
-          (m, s, i) =>
-            m === MarketType.PrivateEquity && i === InvestmentType.Buyout
-        );
+        specificData = marketIndices[MarketIndex.Buyout].data;
         series = [
           {
             dataKey: "specific_scenario",
@@ -199,15 +167,15 @@ export default function ComparisonPage() {
           },
           {
             dataKey: "eurotech_average",
-            name: "Eurotech Revenue Multiple",
-            color: "#6b7280",
+            name: INDEX_CONFIGS.eurotech.name,
+            color: INDEX_CONFIGS.eurotech.color,
             strokeDasharray: "5 5",
           },
         ];
         break;
 
       case ScenarioId.Listed:
-        specificData = aggregateData((m) => m === MarketType.PublicMarkets);
+        specificData = marketIndices[MarketIndex.Listed].data;
         series = [
           {
             dataKey: "specific_scenario",
@@ -216,8 +184,8 @@ export default function ComparisonPage() {
           },
           {
             dataKey: "eurotech_average",
-            name: "Eurotech Revenue Multiple",
-            color: "#6b7280",
+            name: INDEX_CONFIGS.eurotech.name,
+            color: INDEX_CONFIGS.eurotech.color,
             strokeDasharray: "5 5",
           },
         ];
@@ -233,8 +201,8 @@ export default function ComparisonPage() {
           },
           {
             dataKey: "eurotech_average",
-            name: "Eurotech Revenue Multiple",
-            color: "#6b7280",
+            name: INDEX_CONFIGS.eurotech.name,
+            color: INDEX_CONFIGS.eurotech.color,
             strokeDasharray: "5 5",
           },
         ];
@@ -250,8 +218,8 @@ export default function ComparisonPage() {
           },
           {
             dataKey: "eurotech_average",
-            name: "Eurotech Revenue Multiple",
-            color: "#6b7280",
+            name: INDEX_CONFIGS.eurotech.name,
+            color: INDEX_CONFIGS.eurotech.color,
             strokeDasharray: "5 5",
           },
         ];
@@ -267,8 +235,8 @@ export default function ComparisonPage() {
           },
           {
             dataKey: "eurotech_average",
-            name: "Eurotech Revenue Multiple",
-            color: "#6b7280",
+            name: INDEX_CONFIGS.eurotech.name,
+            color: INDEX_CONFIGS.eurotech.color,
             strokeDasharray: "5 5",
           },
         ];
@@ -285,8 +253,8 @@ export default function ComparisonPage() {
           },
           {
             dataKey: "eurotech_average",
-            name: "Eurotech Revenue Multiple",
-            color: "#6b7280",
+            name: INDEX_CONFIGS.eurotech.name,
+            color: INDEX_CONFIGS.eurotech.color,
             strokeDasharray: "5 5",
           },
         ];

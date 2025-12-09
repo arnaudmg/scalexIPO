@@ -38,7 +38,7 @@ export const SCENARIO_GROUPS = [
       },
       {
         id: ScenarioId.GrowthPE,
-        label: "Eurotech Growth PE",
+        label: "Eurotech Growth - PE",
       },
       {
         id: ScenarioId.LBO_PE,

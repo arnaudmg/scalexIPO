@@ -47,3 +47,46 @@ export const AVERAGE_CONFIG = {
   name: "Average",
   color: "#6b7280",
 };
+
+export const INDEX_CONFIGS = {
+  eurotech: {
+    name: "Eurotech Index",
+    color: "#6b7280",
+    description: "European Technology Companies Median Revenue Multiple",
+  },
+  ventureCapital: {
+    name: "Venture Capital",
+    color: "#2563eb",
+    description: "Venture Capital Median Revenue Multiple",
+  },
+  earlyStageVC: {
+    name: "Early-stage VC",
+    color: "#60a5fa",
+    description: "Early-stage VC Median Revenue Multiple",
+  },
+  lateStageVC: {
+    name: "Late-stage VC",
+    color: "#9ca3af",
+    description: "Late-stage VC Median Revenue Multiple",
+  },
+  privateEquity: {
+    name: "Private Equity",
+    color: "#059669",
+    description: "Private Equity Median Revenue Multiple",
+  },
+  growthEquity: {
+    name: "Growth Equity",
+    color: "#10b981",
+    description: "Growth Equity Median Revenue Multiple",
+  },
+  buyout: {
+    name: "Buyout",
+    color: "#9ca3af",
+    description: "Buyout Median Revenue Multiple",
+  },
+  listed: {
+    name: "European Listed Tech Segment",
+    color: "#f97316",
+    description: "European Listed Tech Segment Median Revenue Multiple",
+  },
+};
