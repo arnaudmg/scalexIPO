@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { Poppins } from "next/font/google";
 import ScenarioSidebar, { ScenarioId } from "@/components/ScenarioSidebar";
 import AdvancedRevenueChart, {
   ChartSeries,
@@ -21,6 +22,12 @@ const LOCKED_SCENARIOS = [
   ScenarioId.SaaS,
   ScenarioId.IPOPerYear,
 ];
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400"],
+  display: "swap",
+});
 
 export default function ComparisonPage() {
   const [selectedScenario, setSelectedScenario] = useState<ScenarioId>(
@@ -325,7 +332,9 @@ export default function ComparisonPage() {
   }, [selectedScenario]);
 
   return (
-    <div className="h-screen bg-white flex flex-col overflow-hidden">
+    <div
+      className={`${poppins.className} h-screen bg-white flex flex-col overflow-hidden`}
+    >
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar */}
         <ScenarioSidebar
