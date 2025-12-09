@@ -174,7 +174,7 @@ export default function ComparisonPage() {
         series = [
           {
             dataKey: "specific_scenario",
-            name: "Eurotech Growth PE",
+            name: "Eurotech Growth - PE",
             color: "#2B57FF",
           },
           {
